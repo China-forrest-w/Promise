@@ -25,6 +25,14 @@ var Promise = /** @class */ (function () {
             reject(e);
         }
     }
+    Promise.prototype.then = function (onFulfilled, onRejected) {
+        if (this.status === "FULFILLED" /* fulfilled */) {
+            onFulfilled(this.value);
+        }
+        if (this.status === "REJECTED" /* rejected */) {
+            onRejected(this.reason);
+        }
+    };
     return Promise;
 }());
 

@@ -32,7 +32,14 @@ class Promise {
     } catch (e) {
       reject(e);
     }
-
+  }
+  then(onFulfilled: ParameterValueType, onRejected: ParameterValueType) {
+    if(this.status === STATUS.fulfilled) {
+      onFulfilled(this.value);
+    }
+    if(this.status === STATUS.rejected) {
+      onRejected(this.reason);
+    }
   }
 }
 

@@ -8,11 +8,11 @@ new Promise会立即执行
 一旦成功就不能失败，一旦失败就不会成功，也就是状态是不可逆的
 当promise抛出异常后也会走向失败态
 */
+// import Promise from './bundle';
+const Promise = require('./bundle');
 const promise = new Promise((resolve, reject) => {
-  // resolve(333);
-  reject(new Promise((resolve, reject) => {
-    resolve(897879);
-  }));
+  reject(88)
+  resolve(333);
 })
 promise.then(data => {
   console.log('data', data);
