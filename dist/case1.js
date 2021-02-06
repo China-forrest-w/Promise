@@ -11,8 +11,9 @@ new Promise会立即执行
 // import Promise from './bundle';
 const Promise = require('./bundle');
 const promise = new Promise((resolve, reject) => {
-  reject(88)
-  resolve(333);
+  setTimeout(() => {
+    reject(88)
+  }, 1000)
 })
 promise.then(data => {
   console.log('data', data);
