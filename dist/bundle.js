@@ -31,21 +31,29 @@ var Promise = /** @class */ (function () {
     }
     Promise.prototype.then = function (onFulfilled, onRejected) {
         var _this = this;
-        if (this.status === "FULFILLED" /* fulfilled */) {
-            onFulfilled(this.value);
-        }
-        if (this.status === "REJECTED" /* rejected */) {
-            onRejected(this.reason);
-        }
-        if (this.status === "PENDING" /* pending */) {
-            this.onResolveCallbacks.push(function () {
-                // to do
-                onFulfilled(_this.value);
-            });
-            this.onRejectCallbacks.push(function () {
-                onRejected(_this.reason);
-            });
-        }
+        // 每次调用完then都返回一个全新的promise
+        var promise2 = new Promise(function (resolve, reject) {
+            if (_this.status === "FULFILLED" /* fulfilled */) {
+                var x = onFulfilled(_this.value);
+                resolve(x); //用then的返回值作为下一次then的成功结果
+            }
+            if (_this.status === "REJECTED" /* rejected */) {
+                var x = onRejected(_this.reason);
+                resolve(x);
+            }
+            if (_this.status === "PENDING" /* pending */) {
+                _this.onResolveCallbacks.push(function () {
+                    // to do
+                    var x = onFulfilled(_this.value);
+                    resolve(x);
+                });
+                _this.onRejectCallbacks.push(function () {
+                    var x = onRejected(_this.reason);
+                    resolve(x);
+                });
+            }
+        });
+        return promise2;
     };
     return Promise;
 }());
