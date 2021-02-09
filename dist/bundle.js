@@ -23,6 +23,9 @@ function resolvePromise(promise2, x, resolve, reject) {
                     reject(r);
                 });
             }
+            else {
+                resolve(x); //普通对象
+            }
         }
         catch (e) {
             if (called_1)
@@ -127,5 +130,13 @@ var Promise = /** @class */ (function () {
     };
     return Promise;
 }());
+Promise.deferred = function () {
+    var dfd = {};
+    dfd.promise = new Promise(function (resolve, reject) {
+        dfd.resolve = resolve;
+        dfd.reject = reject;
+    });
+    return dfd;
+};
 
 module.exports = Promise;
