@@ -13,8 +13,10 @@ const Promise = require('./bundle');
 const promise = new Promise((resolve, reject) => {
   setTimeout(() => {
     reject(88)
-  }, 1000)
+  }, 4000)
 })
+
+//一个promise对象可以调用多次then方法，当触发的时候按照顺序执行，因此也需要发布订阅模式。
 promise.then(data => {
   console.log('data', data);
 }, (err) => {
