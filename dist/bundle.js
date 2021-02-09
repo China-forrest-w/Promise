@@ -76,7 +76,7 @@ var Promise = /** @class */ (function () {
             if (_this.status === "FULFILLED" /* fulfilled */) {
                 setTimeout(function () {
                     try {
-                        var x = onFulfilled(_this.value);
+                        var x = onFulfilled && onFulfilled(_this.value);
                         ;
                         // resolve(x);  //用then的返回值作为下一次then的成功结果
                         resolvePromise(promise2, x, resolve, reject);
@@ -103,7 +103,7 @@ var Promise = /** @class */ (function () {
                     // to do...
                     setTimeout(function () {
                         try {
-                            var x = onFulfilled(_this.value);
+                            var x = onFulfilled && onFulfilled(_this.value);
                             // resolve(x);
                             resolvePromise(promise2, x, resolve, reject);
                         }
@@ -127,6 +127,9 @@ var Promise = /** @class */ (function () {
             }
         });
         return promise2;
+    };
+    Promise.prototype.catch = function (errFunc) {
+        this.then(null, errFunc);
     };
     return Promise;
 }());

@@ -10,3 +10,9 @@ vscode插件： code runner
 npx tsc --init   生成ts配置文件
 
 node中我们使用 commonJs规范(主要在node中使用)
+
+
+# 测试
+npm install -g promises-aplus-tests
+切换到 /dist
+promises-aplus-tests bundle.js

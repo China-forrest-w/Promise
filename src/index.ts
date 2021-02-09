@@ -7,7 +7,7 @@ type PropsCallBackType = (resolve: ParameterValueType, reject: ParameterValueTyp
 type ParameterValueType = (params?: any) => void
 
 // 核心逻辑，因为x可能是promise,解析x的类型，来判断走向
-function resolvePromise(promise2: Promise, x: Promise | string | number | void, resolve: Function, reject: Function) {
+function resolvePromise(promise2: Promise, x: Promise | string | number | void | null, resolve: Function, reject: Function) {
     // 根据x的值判断其与promise的关系，因x可能是来自外界的Promise(存在不确定性)，要做容错机制
     if (x === promise2) {
         return reject(new TypeError('出错了'))  //我们是为了解析x的状态来决定promise2下一级链式走向，所以不可能相等。
@@ -26,6 +26,8 @@ function resolvePromise(promise2: Promise, x: Promise | string | number | void, 
                     called = true;
                     reject(r);
                 })
+            } else {
+                resolve(x);                    //普通对象
             }
         } catch (e) {
             if (called) return;
@@ -38,6 +40,7 @@ function resolvePromise(promise2: Promise, x: Promise | string | number | void, 
 }
 
 class Promise {
+    static deferred: Function;
     status: STATUS;
     value: any;
     reason: any;
@@ -71,7 +74,7 @@ class Promise {
         }
     }
 
-    then(onFulfilled: ParameterValueType, onRejected: ParameterValueType) {
+    then(onFulfilled: ParameterValueType | null, onRejected: ParameterValueType) {
         onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : (val: any) => val;
         onRejected = typeof onRejected === 'function' ? onRejected : (err: any) => { throw err };
         // 每次调用完then都返回一个全新的promise
@@ -79,7 +82,7 @@ class Promise {
             if (this.status === STATUS.fulfilled) {
                 setTimeout(() => {
                     try {
-                        let x = onFulfilled(this.value);;
+                        let x = onFulfilled && onFulfilled(this.value);;
                         // resolve(x);  //用then的返回值作为下一次then的成功结果
                         resolvePromise(promise2, x, resolve, reject)
                     } catch (e) {
@@ -103,7 +106,7 @@ class Promise {
                     // to do...
                     setTimeout(() => {
                         try {
-                            let x = onFulfilled(this.value);
+                            let x = onFulfilled && onFulfilled(this.value);
                             // resolve(x);
                             resolvePromise(promise2, x, resolve, reject)
                         } catch (e) {
@@ -128,6 +131,19 @@ class Promise {
         })
         return promise2;
     }
+
+    catch(errFunc: any) {
+        this.then(null, errFunc)
+    }
+}
+
+Promise.deferred = function () {
+    let dfd = {} as any;
+    dfd.promise = new Promise((resolve, reject) => {
+        dfd.resolve = resolve;
+        dfd.reject = reject;
+    })
+    return dfd;
 }
 
 export default Promise;
