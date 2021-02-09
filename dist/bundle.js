@@ -34,22 +34,43 @@ var Promise = /** @class */ (function () {
         // 每次调用完then都返回一个全新的promise
         var promise2 = new Promise(function (resolve, reject) {
             if (_this.status === "FULFILLED" /* fulfilled */) {
-                var x = onFulfilled(_this.value);
-                resolve(x); //用then的返回值作为下一次then的成功结果
+                try {
+                    var x = onFulfilled(_this.value);
+                    ;
+                    resolve(x); //用then的返回值作为下一次then的成功结果
+                }
+                catch (e) {
+                    reject(e);
+                }
             }
             if (_this.status === "REJECTED" /* rejected */) {
-                var x = onRejected(_this.reason);
-                resolve(x);
+                try {
+                    var x = onRejected(_this.reason);
+                    resolve(x);
+                }
+                catch (e) {
+                    reject(e);
+                }
             }
             if (_this.status === "PENDING" /* pending */) {
                 _this.onResolveCallbacks.push(function () {
-                    // to do
-                    var x = onFulfilled(_this.value);
-                    resolve(x);
+                    // to do...
+                    try {
+                        var x = onFulfilled(_this.value);
+                        resolve(x);
+                    }
+                    catch (e) {
+                        reject(e);
+                    }
                 });
                 _this.onRejectCallbacks.push(function () {
-                    var x = onRejected(_this.reason);
-                    resolve(x);
+                    try {
+                        var x = onRejected(_this.reason);
+                        resolve(x);
+                    }
+                    catch (e) {
+                        reject(e);
+                    }
                 });
             }
         });

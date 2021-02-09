@@ -17,7 +17,7 @@ let promise = new Promise((resolve, reject) => {
   // })
   return 100;
 }, err => {
-  return 3;
+  throw new Error('err');
 })
 
 promise.then(data => {
