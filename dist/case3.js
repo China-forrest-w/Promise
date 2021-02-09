@@ -1,10 +1,11 @@
 // 1.普通值  调用then方法会返回一个全新的Promise (不能返回this);
+const Promise  = require('./bundle');
 let promise = new Promise((resolve, reject) => {
   resolve('ok');
 }).then(data => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject(new Promise((resolve, reject) => {
+      resolve(new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(100);
         }, 100);
@@ -18,5 +19,5 @@ let promise = new Promise((resolve, reject) => {
 let promise2 = promise.then(data => {
   console.log('success', data);
 }, err => {
-  console.log('err', err)
+  console.log('err------', err)
 });
