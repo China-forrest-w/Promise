@@ -6,7 +6,7 @@ const enum STATUS {
 type PropsCallBackType = (resolve: ParameterValueType, reject: ParameterValueType) => void;
 type ParameterValueType = (params?: any) => void
 
-    // 核心逻辑，因为x可能是promise,解析x的类型，来判断走向
+// 核心逻辑，因为x可能是promise,解析x的类型，来判断走向
 function resolvePromise(promise2: Promise, x: Promise | string | number | void, resolve: Function, reject: Function) {
     // 根据x的值判断其与promise的关系，因x可能是来自外界的Promise(存在不确定性)，要做容错机制
     if (x === promise2) {
@@ -72,6 +72,8 @@ class Promise {
     }
 
     then(onFulfilled: ParameterValueType, onRejected: ParameterValueType) {
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : (val: any) => val;
+        onRejected = typeof onRejected === 'function' ? onRejected : (err: any) => { throw err };
         // 每次调用完then都返回一个全新的promise
         let promise2 = new Promise((resolve, reject) => {
             if (this.status === STATUS.fulfilled) {

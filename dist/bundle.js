@@ -66,6 +66,8 @@ var Promise = /** @class */ (function () {
     }
     Promise.prototype.then = function (onFulfilled, onRejected) {
         var _this = this;
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : function (val) { return val; };
+        onRejected = typeof onRejected === 'function' ? onRejected : function (err) { throw err; };
         // 每次调用完then都返回一个全新的promise
         var promise2 = new Promise(function (resolve, reject) {
             if (_this.status === "FULFILLED" /* fulfilled */) {
