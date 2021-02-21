@@ -40,12 +40,12 @@ class Promise {
         }
     }
     then(onFulfilled: ParameterValueType, onRejected: ParameterValueType) {
-        // 每次调用完then都返回一个全新的promise
+                                                           // 每次调用完then都返回一个全新的promise
         let promise2 = new Promise((resolve, reject) => {
             if (this.status === STATUS.fulfilled) {
                 try {
                     let x = onFulfilled(this.value);;
-                    resolve(x);  //用then的返回值作为下一次then的成功结果
+                    resolve(x);                           //用then的返回值作为下一次then的成功结果
                 } catch (e) {
                     reject(e);
                 }
